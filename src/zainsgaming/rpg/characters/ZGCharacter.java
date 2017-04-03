@@ -3,7 +3,7 @@ package zainsgaming.rpg.characters;
 import zainsgaming.rpg.items.Weapon;
 import zainsgaming.rpg.util.DiceUtil;
 
-public class Person {
+public class ZGCharacter {
 
 	private String name;	
 	
@@ -18,8 +18,8 @@ public class Person {
 	 * Basic constructor. Sets stats to default values
 	 * @param name The name to set.
 	 */
-	public Person(String name){
-		this(name, CharacterUtil.DEFAULT_STATS);
+	public ZGCharacter(String name){
+		this(name, ZGCharacterUtil.DEFAULT_STATS);
 	}
 	
 	/**
@@ -27,13 +27,13 @@ public class Person {
 	 * @param name The name to set.
 	 * @param stats The stats. Order: Max HP, STR, DEX, CON, INTL, WIS, CHA
 	 */
-	public Person(String name, int[] stats){
+	public ZGCharacter(String name, int[] stats){
 		this.name = name;
 		
 		//If the stats are not the right size, then use fault stats.
 		if (stats.length != 7){
 			System.out.println("Illegal stats.");
-			stats = CharacterUtil.DEFAULT_STATS;
+			stats = ZGCharacterUtil.DEFAULT_STATS;
 		}
 		
 			//Set stats
@@ -133,42 +133,42 @@ public class Person {
 	 * @return the strength modifier
 	 */
 	public int getStrMod() {
-		return CharacterUtil.calcMod(getStr());
+		return ZGCharacterUtil.calcMod(getStr());
 	}
 
 	/**
 	 * @return the dexterity modifier
 	 */
 	public int getDexMod() {
-		return CharacterUtil.calcMod(getDex());
+		return ZGCharacterUtil.calcMod(getDex());
 	}
 
 	/**
 	 * @return the constitution modifier
 	 */
 	public int getConMod() {
-		return CharacterUtil.calcMod(getCon());
+		return ZGCharacterUtil.calcMod(getCon());
 	}
 
 	/**
 	 * @return the intellect modifier
 	 */
 	public int getIntlMod() {
-		return CharacterUtil.calcMod(getIntl());
+		return ZGCharacterUtil.calcMod(getIntl());
 	}
 
 	/**
 	 * @return the wisdom modifier
 	 */
 	public int getWisMod() {
-		return CharacterUtil.calcMod(getWis());
+		return ZGCharacterUtil.calcMod(getWis());
 	}
 
 	/**
 	 * @return the charisma modifier
 	 */
 	public int getChaMod() {
-		return CharacterUtil.calcMod(getCha());
+		return ZGCharacterUtil.calcMod(getCha());
 	}
 	
 	/**

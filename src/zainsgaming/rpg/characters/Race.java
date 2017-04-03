@@ -7,6 +7,6 @@ public class Race {
 	
 	public Race(Race_Type raceType){
 		this.raceType = raceType;
-		this.speed = CharacterUtil.raceSpeed(raceType);
+		this.speed = ZGCharacterUtil.raceSpeed(raceType);
 	}
 }

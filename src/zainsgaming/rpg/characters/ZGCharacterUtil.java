@@ -9,7 +9,7 @@ import java.util.Random;
  *
  */
 
-public class CharacterUtil {
+public class ZGCharacterUtil {
 	
 	// Default values
 	//MAX HP, STR, DEX, CON, INTL, WIS, CHA

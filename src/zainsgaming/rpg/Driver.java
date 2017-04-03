@@ -2,7 +2,7 @@ package zainsgaming.rpg;
 
 import java.util.Random;
 
-import zainsgaming.rpg.characters.Person;
+import zainsgaming.rpg.characters.ZGCharacter;
 import zainsgaming.rpg.items.Weapon;
 
 public class Driver {
@@ -10,8 +10,8 @@ public class Driver {
 	public static void main(String[] args){
 		
 		
-		Person p1 = new Person("p1");
-		Person p2 = new Person("p2");
+		ZGCharacter p1 = new ZGCharacter("p1");
+		ZGCharacter p2 = new ZGCharacter("p2");
 		Weapon w1 = new Weapon(5);
 		Weapon w2 = new Weapon(4);
 		
@@ -23,7 +23,7 @@ public class Driver {
 		int p1Init = p1.rollInitiative();
 		int p2Init = p2.rollInitiative();
 		
-		Person[] order = new Person[2];
+		ZGCharacter[] order = new ZGCharacter[2];
 		if (p1Init >= p2Init){
 			order[0] = p1;
 			order[1] = p2;
@@ -36,8 +36,8 @@ public class Driver {
 		
 		while (!done){
 			for (int i = 0; i < 2; i++){
-				Person attacker = order[i];
-				Person defender = order[1-i];
+				ZGCharacter attacker = order[i];
+				ZGCharacter defender = order[1-i];
 				
 				int rollHit = attacker.rollHit();
 				System.out.println("Roll hit: " + rollHit);
