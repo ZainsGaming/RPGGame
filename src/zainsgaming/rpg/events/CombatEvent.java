@@ -14,13 +14,13 @@ public class CombatEvent extends Event {
 		characters = new ArrayList<ZGCharacter>();
 		characters.addAll(chars);
 		initOrder = new ArrayList<ZGCharacter>();
-		initializeCombat();
+		initializeOrder();
 	}
 
 	/**
 	 * Initialize the combat by rolling initiative and ordering the characters.
 	 */
-	private void initializeCombat(){
+	private void initializeOrder(){
 		
 		//Roll the initiatives and store them in the map
 		Map<ZGCharacter, Integer> initMap = new HashMap<ZGCharacter, Integer>();
