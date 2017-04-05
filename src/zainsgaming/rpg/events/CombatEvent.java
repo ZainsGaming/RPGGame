@@ -14,13 +14,13 @@ public class CombatEvent extends Event {
 		characters = new ArrayList<ZGCharacter>();
 		characters.addAll(chars);
 		initOrder = new ArrayList<ZGCharacter>();
-		initializeOrder();
+		initiativeOrder();
 	}
 
 	/**
 	 * Initialize the combat by rolling initiative and ordering the characters.
 	 */
-	private void initializeOrder(){
+	private void initiativeOrder(){
 		
 		//Roll the initiatives and store them in the map
 		Map<ZGCharacter, Integer> initMap = new HashMap<ZGCharacter, Integer>();
@@ -28,13 +28,6 @@ public class CombatEvent extends Event {
 			int initiative = zgChar.rollInitiative();
 			initMap.put(zgChar, initiative);
 		}
-
-		/*
-		for (ZGCharacter zgchar : initMap.keySet()){
-			System.out.println(zgchar.getName() + " " + initMap.get(zgchar));
-		}
-		System.out.println();
-		*/
 
 		// Add in initiative order the characters to initOrder
 		// Using insertion sort algorithm
@@ -67,13 +60,8 @@ public class CombatEvent extends Event {
 				}
 			}
 		}
-		
-		/*
-		for (ZGCharacter zgchar : initOrder){
-			System.out.println(zgchar.getName() + " " + initMap.get(zgchar));
-		}
-		*/
-
 	}
+	
+	
 
 }
