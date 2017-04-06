@@ -1,7 +1,10 @@
 package zainsgaming.rpg.interaction.text;
 
+import java.util.List;
+
 import zainsgaming.rpg.characters.ZGCharacter;
 import zainsgaming.rpg.events.Event;
+import zainsgaming.rpg.util.AttackTypes;
 
 /**
  * 
@@ -26,6 +29,10 @@ public class CombatInteraction {
 		scan = ZGScanner.getInstance();
 	}
 	
+	public ZGCharacter getCharacter(){
+		return this.character;
+	}
+	
 	/**
 	 * This method presents the main combat menu. 
 	 */
@@ -43,6 +50,7 @@ public class CombatInteraction {
 			
 			//Call the appropriate submenu based on the input
 			if (input.equals("1")){
+				validInput = true;
 				attackMenu();
 			} else if (input.equals("2")){
 				
@@ -52,7 +60,42 @@ public class CombatInteraction {
 	}
 	
 	private void attackMenu(){
+		AttackTypes attackType = character.getAttackTypes();
 		
+		switch (attackType){
+		case ONE_TARGET:
+			oneTargetAttackMenu();
+		}
+	}
+	
+	private void oneTargetAttackMenu(){
+		
+		System.out.println("Choose your target.");
+		
+		List<ZGCharacter> characters = event.getCharacters();
+		int idx = 0;
+		
+		for (ZGCharacter zgChar : characters){
+			System.out.println(idx + ": " + zgChar.getName());
+			idx++;
+		}
+		
+		ZGCharacter target = null;
+		idx = 0;
+		
+		while (target == null){
+			idx = scan.nextInt();
+			
+			if (idx >= 0 && idx < characters.size()){
+				target = characters.get(idx);
+			}
+		}
+		
+		//roll to hit
+		if (character.rollHit() >= target.getAC()){
+			//If hit was successful, then roll attack
+			target.takeHit(character.rollAttack());
+		}
 	}
 
 }

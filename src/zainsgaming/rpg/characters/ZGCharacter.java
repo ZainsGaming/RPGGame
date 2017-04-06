@@ -1,6 +1,10 @@
 package zainsgaming.rpg.characters;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import zainsgaming.rpg.items.Weapon;
+import zainsgaming.rpg.util.AttackTypes;
 import zainsgaming.rpg.util.DiceUtil;
 
 public class ZGCharacter {
@@ -210,6 +214,11 @@ public class ZGCharacter {
 		return this.currentHP;
 	}
 	
+	
+	public AttackTypes getAttackTypes(){
+		
+		return AttackTypes.ONE_TARGET;
+	}
 	
 	
 }

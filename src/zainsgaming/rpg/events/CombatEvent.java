@@ -2,17 +2,18 @@ package zainsgaming.rpg.events;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import zainsgaming.rpg.characters.ZGCharacter;
+import zainsgaming.rpg.interaction.text.CombatInteraction;
 
 public class CombatEvent extends Event {
-	private ArrayList<ZGCharacter> characters;
-	private ArrayList<ZGCharacter> initOrder;
+	
+	private List<ZGCharacter> initOrder;
 
 	public CombatEvent(ArrayList<ZGCharacter> chars){
-		characters = new ArrayList<ZGCharacter>();
-		characters.addAll(chars);
+		super(chars);
 		initOrder = new ArrayList<ZGCharacter>();
 		initiativeOrder();
 	}
@@ -21,6 +22,8 @@ public class CombatEvent extends Event {
 	 * Initialize the combat by rolling initiative and ordering the characters.
 	 */
 	private void initiativeOrder(){
+		
+		List<ZGCharacter> characters = getCharacters();
 		
 		//Roll the initiatives and store them in the map
 		Map<ZGCharacter, Integer> initMap = new HashMap<ZGCharacter, Integer>();
@@ -58,6 +61,39 @@ public class CombatEvent extends Event {
 						initOrder.add(zgChar);
 					}
 				}
+			}
+		}
+		
+		
+		List<CombatInteraction> cis = new ArrayList<CombatInteraction>();
+		
+		for (ZGCharacter zgChar : characters){
+			CombatInteraction ci = new CombatInteraction(zgChar, this);
+			cis.add(ci);
+		}
+		
+		
+		boolean done = false;
+		int idx = 0;
+		
+		while (!done){
+			CombatInteraction ci = cis.get(idx);
+			ci.combatMenu();
+			
+			idx++;
+			
+			for (CombatInteraction ciTemp : cis){
+				if (ciTemp.getCharacter().getCurrentHP() <= 0){
+					characters.remove(ciTemp.getCharacter());
+					if (characters.size() == 1){
+						System.out.println("DONE");
+						done = true;
+					}
+				}
+			}
+			
+			if (idx == cis.size()){
+				idx = 0;
 			}
 		}
 	}

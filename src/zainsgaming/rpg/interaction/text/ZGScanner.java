@@ -1,5 +1,6 @@
 package zainsgaming.rpg.interaction.text;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -40,6 +41,23 @@ public class ZGScanner {
 	public String nextLine(){
 		//Delegate task to scanner, and trim the result
 		return scanner.nextLine().trim();
+	}
+	
+	public int nextInt(){
+		boolean done = false;
+		int val = 0;
+		
+		while(!done){
+			try {
+				String line = scanner.nextLine();
+				val = Integer.parseInt(line);
+				done = true;
+			} catch (InputMismatchException e){
+				System.out.println("Invalid input.");
+			}
+		}
+		
+		return val;
 	}
 	
 }
