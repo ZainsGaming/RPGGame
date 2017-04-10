@@ -10,47 +10,51 @@ import zainsgaming.rpg.util.DiceUtil;
 public class ZGCharacter {
 
 	private String name;	
-	
+
 	// Person's stats
 	private int str, dex, con, intl, wis, cha ;
 	private int maxHP, currentHP;
-	
+	private boolean isFriendly;
+
 	//Equipment
 	private Weapon equippedWeapon;
-	
+
 	/**
-	 * Basic constructor. Sets stats to default values
+	 * Basic constructor. Sets stats to default values.
 	 * @param name The name to set.
 	 */
 	public ZGCharacter(String name){
-		this(name, ZGCharacterUtil.DEFAULT_STATS);
+		this(name, ZGCharacterUtil.DEFAULT_STATS, false);
 	}
-	
+
 	/**
 	 * Constructor. Sets instance variables to provided values.
 	 * @param name The name to set.
 	 * @param stats The stats. Order: Max HP, STR, DEX, CON, INTL, WIS, CHA
+	 * @param isFriendly - true if the character is friendly to the player, else false.
 	 */
-	public ZGCharacter(String name, int[] stats){
+	public ZGCharacter(String name, int[] stats, boolean isFriendly){
 		this.name = name;
+		this.isFriendly = isFriendly;
+		
 		
 		//If the stats are not the right size, then use fault stats.
 		if (stats.length != 7){
 			System.out.println("Illegal stats.");
 			stats = ZGCharacterUtil.DEFAULT_STATS;
 		}
-		
-			//Set stats
-			this.maxHP = stats[0];
-			this.currentHP = stats[0];	//CurrentHP = MaxHP
-			this.str = stats[1];
-			this.dex = stats[2];
-			this.con = stats[3];
-			this.intl = stats[4];
-			this.wis = stats[5];
-			this.cha = stats[6];
+
+		//Set stats
+		this.maxHP = stats[0];
+		this.currentHP = stats[0];	//CurrentHP = MaxHP
+		this.str = stats[1];
+		this.dex = stats[2];
+		this.con = stats[3];
+		this.intl = stats[4];
+		this.wis = stats[5];
+		this.cha = stats[6];
 	}
-	
+
 	//GETTERS AND SETTERS
 
 	/**
@@ -58,6 +62,13 @@ public class ZGCharacter {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * @return the isFriendly
+	 */
+	public boolean getIsFriendly(){
+		return isFriendly;
 	}
 
 	/**
@@ -131,8 +142,16 @@ public class ZGCharacter {
 		this.equippedWeapon = equippedWeapon;
 	}
 	
+	/**
+	 * Sets the isFriendly flag
+	 * @param isFriendly The flag value to set
+	 */
+	public void setIsFriendly(boolean isFriendly){
+		this.isFriendly = isFriendly;
+	}
+
 	//GETTERS FOR ABILITY MODIFIERS
-	
+
 	/**
 	 * @return the strength modifier
 	 */
@@ -174,35 +193,35 @@ public class ZGCharacter {
 	public int getChaMod() {
 		return ZGCharacterUtil.calcMod(getCha());
 	}
-	
+
 	/**
 	 * @return Roll initiative: 1D20 + Dex Mod 
 	 */
 	public int rollInitiative(){
-		 return DiceUtil.d20() + getDexMod();
+		return DiceUtil.d20() + getDexMod();
 	}
-	
+
 	/**
 	 * @return Roll to hit: 1D20 + modifier
 	 */
 	public int rollHit(){
 		return DiceUtil.d20() + getStrMod();
 	}
-	
+
 	/**
 	 * @return Roll the attack: Weapon dmg + mod
 	 */
 	public int rollAttack(){
 		return getEquippedWeapon().rollDmg() + getStrMod();
 	}
-	
+
 	/**
 	 * @return Armor class: 10 + Dex Mod
 	 */
 	public int getAC(){
 		return 10 + getDexMod();
 	}
-	
+
 	/**
 	 * Takes the given dmg
 	 * @param dmg The dmg value to reduce the current HP.
@@ -210,15 +229,15 @@ public class ZGCharacter {
 	 */
 	public int takeHit(int dmg){
 		this.currentHP -= dmg;
-		
+
 		return this.currentHP;
 	}
-	
-	
+
+
 	public AttackTypes getAttackTypes(){
-		
+
 		return AttackTypes.ONE_TARGET;
 	}
-	
-	
+
+
 }

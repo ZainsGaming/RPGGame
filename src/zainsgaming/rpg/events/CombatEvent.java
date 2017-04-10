@@ -7,24 +7,61 @@ import java.util.Map;
 
 import zainsgaming.rpg.characters.ZGCharacter;
 import zainsgaming.rpg.interaction.text.CombatInteraction;
+import zainsgaming.rpg.interaction.text.CombatInteractionPlayer;
 
 public class CombatEvent extends Event {
-	
-	private List<ZGCharacter> initOrder;
 
+	//Lists - 
+	//initOrder - The initiative order
+	//enemies - The player's enemies
+	//team - The player's team
+	private List<ZGCharacter> initOrder, enemies, team;
+
+	/**
+	 * Constructor. Sets the list of characters, initiative order, team, and the enemies.
+	 * @param chars The characters involved in the event
+	 */
 	public CombatEvent(ArrayList<ZGCharacter> chars){
 		super(chars);
+
+		//Set the initiative order
 		initOrder = new ArrayList<ZGCharacter>();
 		initiativeOrder();
+
+		//Set the list of team and enemies
+		
+		enemies = new ArrayList<ZGCharacter>();
+		team = new ArrayList<ZGCharacter>();
+		for (ZGCharacter zgChar : getCharacters()){
+			if (zgChar.getIsFriendly()){
+				team.add(zgChar);
+			} else {
+				enemies.add(zgChar);
+			}
+		}
+	}
+	
+	/**
+	 * @return The list of enemies
+	 */
+	public List<ZGCharacter> getEnemies(){
+		return this.enemies;
+	}
+	
+	/**
+	 * @return The list of the player's team
+	 */
+	public List<ZGCharacter> getTeam(){
+		return this.team;
 	}
 
 	/**
 	 * Initialize the combat by rolling initiative and ordering the characters.
 	 */
 	private void initiativeOrder(){
-		
+
 		List<ZGCharacter> characters = getCharacters();
-		
+
 		//Roll the initiatives and store them in the map
 		Map<ZGCharacter, Integer> initMap = new HashMap<ZGCharacter, Integer>();
 		for (ZGCharacter zgChar : characters){
@@ -54,7 +91,7 @@ public class CombatEvent extends Event {
 							i = initOrder.size();
 						}
 					}
-					
+
 					//If character was not added in the order during the for loop, that means that the character belongs
 					//at the end of the order
 					if (!added){
@@ -62,26 +99,35 @@ public class CombatEvent extends Event {
 					}
 				}
 			}
-		}
-		
-		
+		}		
+	}
+
+	public void startCombat(){
+
+		List<ZGCharacter> characters = getCharacters();
 		List<CombatInteraction> cis = new ArrayList<CombatInteraction>();
-		
+
 		for (ZGCharacter zgChar : characters){
-			CombatInteraction ci = new CombatInteraction(zgChar, this);
+			CombatInteraction ci = null;
+			
+			if (zgChar.getIsFriendly()){
+				ci = new CombatInteractionPlayer(zgChar, this);
 			cis.add(ci);
+			} else {
+				
+			}
 		}
-		
-		
+
+
 		boolean done = false;
 		int idx = 0;
-		
+
 		while (!done){
 			CombatInteraction ci = cis.get(idx);
 			ci.combatMenu();
-			
+
 			idx++;
-			
+
 			for (CombatInteraction ciTemp : cis){
 				if (ciTemp.getCharacter().getCurrentHP() <= 0){
 					characters.remove(ciTemp.getCharacter());
@@ -91,13 +137,12 @@ public class CombatEvent extends Event {
 					}
 				}
 			}
-			
+
 			if (idx == cis.size()){
 				idx = 0;
 			}
 		}
+
 	}
-	
-	
 
 }
