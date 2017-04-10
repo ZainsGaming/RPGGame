@@ -7,6 +7,7 @@ import java.util.Map;
 
 import zainsgaming.rpg.characters.ZGCharacter;
 import zainsgaming.rpg.interaction.text.CombatInteraction;
+import zainsgaming.rpg.interaction.text.CombatInteractionAI;
 import zainsgaming.rpg.interaction.text.CombatInteractionPlayer;
 
 public class CombatEvent extends Event {
@@ -102,8 +103,13 @@ public class CombatEvent extends Event {
 		}		
 	}
 
-	public void startCombat(){
+	/**
+	 * Runs the combat sequence.
+	 * @return True if the player's team defeats the enemies, else false.
+	 */
+	public boolean startCombat(){
 
+		//Initialize the combat interactions
 		List<ZGCharacter> characters = getCharacters();
 		List<CombatInteraction> cis = new ArrayList<CombatInteraction>();
 
@@ -112,35 +118,67 @@ public class CombatEvent extends Event {
 			
 			if (zgChar.getIsFriendly()){
 				ci = new CombatInteractionPlayer(zgChar, this);
-			cis.add(ci);
 			} else {
-				
+				ci = new CombatInteractionAI(zgChar, this);
 			}
+			
+			cis.add(ci);
 		}
 
 
+		//Loop flag and index. 
 		boolean done = false;
 		int idx = 0;
 
+		
+		List<ZGCharacter> teamCopy = new ArrayList<ZGCharacter>();
+		List<ZGCharacter> enemiesCopy = new ArrayList<ZGCharacter>();
+		teamCopy.addAll(team);
+		enemiesCopy.addAll(enemies);
+		
+		//Keep looping until one side is defeated
+		//Loop through the characters, call the combatMenu for the corresponding 
+		//combat interaction for the character, remove defeated characters (hp <= 0),
+		//check if one side is defeated, and finally update the index.
 		while (!done){
+			//Call combatMenu for the current character
 			CombatInteraction ci = cis.get(idx);
 			ci.combatMenu();
 
-			idx++;
-
-			for (CombatInteraction ciTemp : cis){
-				if (ciTemp.getCharacter().getCurrentHP() <= 0){
-					characters.remove(ciTemp.getCharacter());
-					if (characters.size() == 1){
-						System.out.println("DONE");
-						done = true;
+			//Update cis and copy lists by removing defeated character
+			for (int i = 0; i < characters.size(); i++){
+				ZGCharacter charTemp = characters.get(i);
+				if (charTemp.getCurrentHP() <= 0){
+					cis.remove(i);
+					
+					if (charTemp.getIsFriendly()){
+						teamCopy.remove(charTemp);
+					} else {
+						enemiesCopy.remove(charTemp);
 					}
 				}
 			}
-
-			if (idx == cis.size()){
+			
+			//If either copy lists are empty, then combat is done
+			if (teamCopy.isEmpty() || enemiesCopy.isEmpty()){
+				done = true;
+			}
+			
+			
+			//Update index
+			idx++;
+			if (idx >= cis.size()){
 				idx = 0;
 			}
+		}
+		
+		
+		//Return the team is defeated, return false, if the enemies are defeated then return true.
+		//Even if both sides are defeated, the player's team being defeated counts as a fail.
+		if (teamCopy.isEmpty()){
+			return false;
+		} else {
+			return true;
 		}
 
 	}

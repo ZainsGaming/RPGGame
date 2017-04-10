@@ -24,11 +24,12 @@ public class CombatInteractionPlayer extends CombatInteraction {
 	 */
 	public void combatMenu(){
 
+		System.out.println(getCharacter().getName() + "\'s Turn.");
+		
 		//Print the possible choices to the user
-		System.out.println("Choose action:");
 		System.out.println("1: Melee Attack");
 		System.out.println("2: Dodge");
-
+		System.out.print("Choose action: ");
 
 		boolean validInput = false;	
 		while (!validInput){ //Loop until we have valid input
@@ -40,8 +41,12 @@ public class CombatInteractionPlayer extends CombatInteraction {
 				meleeAttackMenu();
 			} else if (input.equals("2")){
 
+			} else {
+				System.out.print("Invalid input. Enter value between 1 - 2: ");
 			}
 		}
+		
+		System.out.println("----------");
 	}
 
 	/**
@@ -64,16 +69,15 @@ public class CombatInteractionPlayer extends CombatInteraction {
 	private void oneTargetAttackMenu(){
 
 		//Prompt user to pick target
-
 		//Print possible target (enemies, friendlies, and self)
-		System.out.println("Choose your target.");
 		List<ZGCharacter> characters = getEvent().getCharacters();
 		int idx = 0;
 		for (ZGCharacter zgChar : characters){
 			System.out.println(idx + ": " + zgChar.getName());
 			idx++;
 		}
-
+		System.out.print("Choose your target: ");
+		
 		//Assing target based on input
 		ZGCharacter target = null;
 		idx = 0;
@@ -81,6 +85,8 @@ public class CombatInteractionPlayer extends CombatInteraction {
 			idx = scan.nextInt();
 			if (idx >= 0 && idx < characters.size()){
 				target = characters.get(idx);
+			} else {
+				System.out.print("Invalid input. Enter integer between 0 and " + (characters.size()-1) + ": ");
 			}
 		}
 		
@@ -94,7 +100,12 @@ public class CombatInteractionPlayer extends CombatInteraction {
 		ZGCharacter character = getCharacter();
 		if (character.rollHit() >= target.getAC()){
 			//If hit was successful, then roll attack
-			target.takeHit(character.rollAttack());
+			int attackVal = character.rollAttack();
+			target.takeHit(attackVal);
+			System.out.println("Hit for: " + attackVal + ".");
+			System.out.println(target.getName() + "\'s current HP: " + target.getCurrentHP() + ".");		
+		} else {
+			System.out.println("Attack miss.");
 		}
 	}
 }

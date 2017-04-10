@@ -14,6 +14,7 @@ public class Driver {
 		ZGCharacter p1 = new ZGCharacter("p1");
 		ZGCharacter p2 = new ZGCharacter("p2");
 		ZGCharacter p3 = new ZGCharacter("p3");
+		p1.setIsFriendly(true);
 
 		Weapon w1 = new Weapon(5);
 		Weapon w2 = new Weapon(4);
@@ -29,6 +30,7 @@ public class Driver {
 		list.add(p3);
 	
 		CombatEvent ce = new CombatEvent(list);
+		ce.startCombat();
 			
 		/*
 		Random rand = new Random(1234);
