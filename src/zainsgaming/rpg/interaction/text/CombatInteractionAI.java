@@ -22,7 +22,7 @@ public class CombatInteractionAI extends CombatInteraction {
 	public void combatMenu() {
 		System.out.println(getCharacter().getName() + "\'s Turn.");
 		
-		//Get the targets
+		//Get all possible targets
 		List<ZGCharacter> team = getEvent().getTeam();
 		
 		//Pick a target to attack.
@@ -30,26 +30,8 @@ public class CombatInteractionAI extends CombatInteraction {
 		ZGCharacter target = team.get(idx);
 		
 		//Attack target
-		attackTarget(target);
+		getCharacter().attackTarget(target);
 		
 		System.out.println("----------");
 	}
-	
-	private void attackTarget(ZGCharacter target){
-		
-		System.out.println("Attacking " + target.getName());
-		
-		//roll to hit
-		ZGCharacter character = getCharacter();
-		if (character.rollHit() >= target.getAC()){
-			//If hit was successful, then roll attack
-			int attackVal = character.rollAttack();
-			target.takeHit(attackVal);
-			System.out.println("Hit for: " + attackVal + ".");
-			System.out.println(target.getName() + "\'s current HP: " + target.getCurrentHP() + ".");		
-		} else {
-			System.out.println("Attack miss.");
-		}
-	}
-
 }

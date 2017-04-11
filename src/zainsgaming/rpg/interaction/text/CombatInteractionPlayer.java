@@ -40,7 +40,7 @@ public class CombatInteractionPlayer extends CombatInteraction {
 				validInput = true;
 				meleeAttackMenu();
 			} else if (input.equals("2")){
-
+				getCharacter().setIsDefending(true);
 			} else {
 				System.out.print("Invalid input. Enter value between 1 - 2: ");
 			}
@@ -91,21 +91,6 @@ public class CombatInteractionPlayer extends CombatInteraction {
 		}
 		
 		//Attack target
-		attackTarget(target);
-
-	}
-
-	private void attackTarget(ZGCharacter target){
-		//roll to hit
-		ZGCharacter character = getCharacter();
-		if (character.rollHit() >= target.getAC()){
-			//If hit was successful, then roll attack
-			int attackVal = character.rollAttack();
-			target.takeHit(attackVal);
-			System.out.println("Hit for: " + attackVal + ".");
-			System.out.println(target.getName() + "\'s current HP: " + target.getCurrentHP() + ".");		
-		} else {
-			System.out.println("Attack miss.");
-		}
+		getCharacter().attackTarget(target);
 	}
 }

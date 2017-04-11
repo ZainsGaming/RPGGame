@@ -15,6 +15,7 @@ public class ZGCharacter {
 	private int str, dex, con, intl, wis, cha ;
 	private int maxHP, currentHP;
 	private boolean isFriendly;
+	private boolean isDefending;
 
 	//Equipment
 	private Weapon equippedWeapon;
@@ -24,7 +25,7 @@ public class ZGCharacter {
 	 * @param name The name to set.
 	 */
 	public ZGCharacter(String name){
-		this(name, ZGCharacterUtil.DEFAULT_STATS, false);
+		this(name, ZGCharacterUtil.DEFAULT_STATS, false, false);
 	}
 
 	/**
@@ -33,9 +34,10 @@ public class ZGCharacter {
 	 * @param stats The stats. Order: Max HP, STR, DEX, CON, INTL, WIS, CHA
 	 * @param isFriendly - true if the character is friendly to the player, else false.
 	 */
-	public ZGCharacter(String name, int[] stats, boolean isFriendly){
+	public ZGCharacter(String name, int[] stats, boolean isDefending, boolean isFriendly){
 		this.name = name;
 		this.isFriendly = isFriendly;
+		this.isDefending = isDefending;
 		
 		
 		//If the stats are not the right size, then use fault stats.
@@ -69,6 +71,13 @@ public class ZGCharacter {
 	 */
 	public boolean getIsFriendly(){
 		return isFriendly;
+	}
+	
+	/**
+	 * @return the isDefending
+	 */
+	public boolean getIsDefending(){
+		return isDefending;
 	}
 
 	/**
@@ -148,6 +157,14 @@ public class ZGCharacter {
 	 */
 	public void setIsFriendly(boolean isFriendly){
 		this.isFriendly = isFriendly;
+	}
+	
+	/**
+	 * Sets the isDefending flag
+	 * @param isDefending The flag value to set
+	 */
+	public void setIsDefending(boolean isDefending){
+		this.isDefending = isDefending;
 	}
 
 	//GETTERS FOR ABILITY MODIFIERS
@@ -233,11 +250,46 @@ public class ZGCharacter {
 		return this.currentHP;
 	}
 
-
 	public AttackTypes getAttackTypes(){
 
 		return AttackTypes.ONE_TARGET;
 	}
 
+	
+	/**
+	 * Updates the status effects for the new turn
+	 */
+	public void newTurn(){
+		isDefending = false;
+	}
+	
+	/**
+	 * Attack the target.
+	 * @param target The target to attack
+	 */
+	public void attackTarget(ZGCharacter target){
+		//roll to hit
+		int hitRoll = rollHit();
+		
+		//If target is defending, the roll with disadvantage
+		if (target.isDefending){
+			int hitRollB = rollHit();
+			
+			if (hitRollB < hitRoll){
+				hitRoll = hitRollB;
+			}
+		}
+		
+		if (hitRoll >= target.getAC()){
+			//If hit was successful, then roll attack
+			int attackVal = rollAttack();
+			target.takeHit(attackVal);
+			System.out.println("Hit for: " + attackVal + ".");
+			System.out.println(target.getName() + "\'s current HP: " + target.getCurrentHP() + ".");		
+		} else {
+			//Attack missed
+			System.out.println("Attack miss.");
+		}
+	}
 
 }
