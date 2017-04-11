@@ -130,7 +130,6 @@ public class CombatEvent extends Event {
 		boolean done = false;
 		int idx = 0;
 
-		
 		List<ZGCharacter> teamCopy = new ArrayList<ZGCharacter>();
 		List<ZGCharacter> enemiesCopy = new ArrayList<ZGCharacter>();
 		teamCopy.addAll(team);
