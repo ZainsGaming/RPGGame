@@ -36,55 +36,19 @@ public class ZGCharacterUtil {
 		int statsBonus[] = {0, 0, 0, 0, 0, 0, 0};
 		
 		switch (raceType){
-		case DWARF_HILL:
-			statsBonus[0] = 1;	//MAX HP +1
-			statsBonus[3] = 2;	//CON +2
-			statsBonus[5] = 1;	//WIS +1
-			break;
-		case DWARD_MOUNTAIN:
-			statsBonus[1] = 2;	//STR +2
-			statsBonus[3] = 2;	//CON +2
-			break;
-		case ELF_HIGH:
-			statsBonus[2] = 2;	//DEX +2
-			statsBonus[4] = 1;	//INTL +1
-			break;
-		case ELF_WOOD:
-			statsBonus[2] = 2;	//DEX +2
-			statsBonus[5] = 1; 	//WIS +1
-			break;
-		case ELF_DARK:
-			statsBonus[2] = 2;	//DEX +2
-			statsBonus[6] = 1;	//CHA +1
-			break;
-		case HALFLING_LIGHTFOOT:
-			statsBonus[2] = 2;	//DEX +2
-			statsBonus[6] = 1;	//CHA +1
-			break;
-		case HALFLING_STOUT:
-			statsBonus[2] = 2;	//DEX +2
-			statsBonus[3] = 1;	//CON +1
-			break;
 		case HUMAN:
 			for (int i = 1; i < 7; i++){
 				statsBonus[i] = 1;	//+1 to all stats, except for Max HP
 			}
 			break;
-		case DRAGONBORN:
-			statsBonus[1] = 2;	//STR +2
-			statsBonus[6] = 1;	//CHA +1
-			break;
-		case GNOME_FOREST:
-			statsBonus[4] = 2;	//INTL +2
-			statsBonus[2] = 1;	//DEX +1
-			break;
-		case GNOME_ROCK:
-			statsBonus[4] = 2;	//INTL +2
-			statsBonus[3] = 1;	//CON +1
-			break;
-		case TIEFLING:
+		case ELF:
+			statsBonus[2] = 2;	//DEX +2
 			statsBonus[4] = 1;	//INTL +1
-			statsBonus[6] = 2;	//CHA +2
+			break;
+		case DWARF:
+			statsBonus[0] = 1;	//MAX HP +1
+			statsBonus[3] = 2;	//CON +2
+			statsBonus[5] = 1;	//WIS +1
 			break;
 		}
 		
@@ -100,30 +64,12 @@ public class ZGCharacterUtil {
 		
 		//Return the speed based on race.
 		switch (raceType){
-		case DWARF_HILL:
-			return 2;
-		case DWARD_MOUNTAIN:
-			return 2;
-		case ELF_HIGH:
-			return 3;
-		case ELF_WOOD:
-			return 3;
-		case ELF_DARK:
-			return 3;
-		case HALFLING_LIGHTFOOT:
-			return 2;
-		case HALFLING_STOUT:
-			return 2;
 		case HUMAN:
 			return 3;
-		case DRAGONBORN:
+		case ELF:
 			return 3;
-		case GNOME_FOREST:
+		case DWARF:
 			return 2;
-		case GNOME_ROCK:
-			return 2;
-		case TIEFLING:
-			return 3;
 		default:
 			return 1;
 		}
