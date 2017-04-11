@@ -38,8 +38,8 @@ public class ZGCharacter {
 		this.name = name;
 		this.isFriendly = isFriendly;
 		this.isDefending = isDefending;
-		
-		
+
+
 		//If the stats are not the right size, then use fault stats.
 		if (stats.length != 7){
 			System.out.println("Illegal stats.");
@@ -57,28 +57,89 @@ public class ZGCharacter {
 		this.cha = stats[6];
 	}
 
-	//GETTERS AND SETTERS
+
+	// Dice Rolls
 
 	/**
-	 * @return the name
+	 * @return Roll initiative: 1D20 + Dex Mod 
 	 */
-	public String getName() {
-		return name;
+	public int rollInitiative(){
+		return DiceUtil.d20() + getDexMod();
 	}
-	
+
 	/**
-	 * @return the isFriendly
+	 * @return Roll to hit: 1D20 + modifier
 	 */
-	public boolean getIsFriendly(){
-		return isFriendly;
+	public int rollHit(){
+		return DiceUtil.d20() + getStrMod();
 	}
-	
+
 	/**
-	 * @return the isDefending
+	 * @return Roll the attack: Weapon dmg + mod
 	 */
-	public boolean getIsDefending(){
-		return isDefending;
+	public int rollAttack(){
+		return getEquippedWeapon().rollDmg() + getStrMod();
 	}
+
+	//Actions
+
+	/**
+	 * Takes the given dmg
+	 * @param dmg The dmg value to reduce the current HP.
+	 * @return The new remaining dmg.
+	 */
+	public int takeHit(int dmg){
+		this.currentHP -= dmg;
+
+		return this.currentHP;
+	}
+
+	/**
+	 * @return The possible attack types for character
+	 */
+	public AttackTypes getAttackTypes(){
+
+		return AttackTypes.ONE_TARGET;
+	}
+
+
+	/**
+	 * Updates the status effects for the new turn
+	 */
+	public void newTurn(){
+		isDefending = false;
+	}
+
+	/**
+	 * Attack the target.
+	 * @param target The target to attack
+	 */
+	public void attackTarget(ZGCharacter target){
+		//roll to hit
+		int hitRoll = rollHit();
+
+		//If target is defending, the roll with disadvantage
+		if (target.isDefending){
+			int hitRollB = rollHit();
+
+			if (hitRollB < hitRoll){
+				hitRoll = hitRollB;
+			}
+		}
+
+		if (hitRoll >= target.getAC()){
+			//If hit was successful, then roll attack
+			int attackVal = rollAttack();
+			target.takeHit(attackVal);
+			System.out.println("Hit for: " + attackVal + ".");
+			System.out.println(target.getName() + "\'s current HP: " + target.getCurrentHP() + ".");		
+		} else {
+			//Attack missed
+			System.out.println("Attack miss.");
+		}
+	}
+
+	//Getters for stats and their modifiers
 
 	/**
 	 * @return the str
@@ -123,53 +184,6 @@ public class ZGCharacter {
 	}
 
 	/**
-	 * @return the maxHP
-	 */
-	public int getMaxHP() {
-		return maxHP;
-	}
-
-	/**
-	 * @return the currentHP
-	 */
-	public int getCurrentHP() {
-		return currentHP;
-	}
-
-	/**
-	 * @return the equippedWeapon
-	 */
-	public Weapon getEquippedWeapon() {
-		return equippedWeapon;
-	}
-
-	/**
-	 * Sets the equipped weapon
-	 * @param equippedWeapon The weapon to set
-	 */
-	public void setEquippedWeapon(Weapon equippedWeapon){
-		this.equippedWeapon = equippedWeapon;
-	}
-	
-	/**
-	 * Sets the isFriendly flag
-	 * @param isFriendly The flag value to set
-	 */
-	public void setIsFriendly(boolean isFriendly){
-		this.isFriendly = isFriendly;
-	}
-	
-	/**
-	 * Sets the isDefending flag
-	 * @param isDefending The flag value to set
-	 */
-	public void setIsDefending(boolean isDefending){
-		this.isDefending = isDefending;
-	}
-
-	//GETTERS FOR ABILITY MODIFIERS
-
-	/**
 	 * @return the strength modifier
 	 */
 	public int getStrMod() {
@@ -212,84 +226,79 @@ public class ZGCharacter {
 	}
 
 	/**
-	 * @return Roll initiative: 1D20 + Dex Mod 
-	 */
-	public int rollInitiative(){
-		return DiceUtil.d20() + getDexMod();
-	}
-
-	/**
-	 * @return Roll to hit: 1D20 + modifier
-	 */
-	public int rollHit(){
-		return DiceUtil.d20() + getStrMod();
-	}
-
-	/**
-	 * @return Roll the attack: Weapon dmg + mod
-	 */
-	public int rollAttack(){
-		return getEquippedWeapon().rollDmg() + getStrMod();
-	}
-
-	/**
 	 * @return Armor class: 10 + Dex Mod
 	 */
 	public int getAC(){
 		return 10 + getDexMod();
 	}
 
-	/**
-	 * Takes the given dmg
-	 * @param dmg The dmg value to reduce the current HP.
-	 * @return The new remaining dmg.
-	 */
-	public int takeHit(int dmg){
-		this.currentHP -= dmg;
 
-		return this.currentHP;
+	// Other getters and setters
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 
-	public AttackTypes getAttackTypes(){
-
-		return AttackTypes.ONE_TARGET;
+	/**
+	 * @return the isFriendly
+	 */
+	public boolean getIsFriendly(){
+		return isFriendly;
 	}
 
-	
 	/**
-	 * Updates the status effects for the new turn
+	 * @return the isDefending
 	 */
-	public void newTurn(){
-		isDefending = false;
+	public boolean getIsDefending(){
+		return isDefending;
 	}
-	
+
 	/**
-	 * Attack the target.
-	 * @param target The target to attack
+	 * @return the maxHP
 	 */
-	public void attackTarget(ZGCharacter target){
-		//roll to hit
-		int hitRoll = rollHit();
-		
-		//If target is defending, the roll with disadvantage
-		if (target.isDefending){
-			int hitRollB = rollHit();
-			
-			if (hitRollB < hitRoll){
-				hitRoll = hitRollB;
-			}
-		}
-		
-		if (hitRoll >= target.getAC()){
-			//If hit was successful, then roll attack
-			int attackVal = rollAttack();
-			target.takeHit(attackVal);
-			System.out.println("Hit for: " + attackVal + ".");
-			System.out.println(target.getName() + "\'s current HP: " + target.getCurrentHP() + ".");		
-		} else {
-			//Attack missed
-			System.out.println("Attack miss.");
-		}
+	public int getMaxHP() {
+		return maxHP;
+	}
+
+	/**
+	 * @return the currentHP
+	 */
+	public int getCurrentHP() {
+		return currentHP;
+	}
+
+	/**
+	 * @return the equippedWeapon
+	 */
+	public Weapon getEquippedWeapon() {
+		return equippedWeapon;
+	}
+
+	/**
+	 * Sets the equipped weapon
+	 * @param equippedWeapon The weapon to set
+	 */
+	public void setEquippedWeapon(Weapon equippedWeapon){
+		this.equippedWeapon = equippedWeapon;
+	}
+
+	/**
+	 * Sets the isFriendly flag
+	 * @param isFriendly The flag value to set
+	 */
+	public void setIsFriendly(boolean isFriendly){
+		this.isFriendly = isFriendly;
+	}
+
+	/**
+	 * Sets the isDefending flag
+	 * @param isDefending The flag value to set
+	 */
+	public void setIsDefending(boolean isDefending){
+		this.isDefending = isDefending;
 	}
 
 }
