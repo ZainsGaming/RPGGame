@@ -9,6 +9,7 @@ import zainsgaming.rpg.characters.ZGCharacter;
 import zainsgaming.rpg.interaction.text.CombatInteraction;
 import zainsgaming.rpg.interaction.text.CombatInteractionAI;
 import zainsgaming.rpg.interaction.text.CombatInteractionPlayer;
+import zainsgaming.rpg.world.Grid;
 
 public class CombatEvent extends Event {
 
@@ -17,13 +18,17 @@ public class CombatEvent extends Event {
 	//enemies - The player's enemies
 	//team - The player's team
 	private List<ZGCharacter> initOrder, enemies, team;
+	private Grid grid;		//The combat grid
 
 	/**
 	 * Constructor. Sets the list of characters, initiative order, team, and the enemies.
 	 * @param chars The characters involved in the event
 	 */
-	public CombatEvent(ArrayList<ZGCharacter> chars){
+	public CombatEvent(ArrayList<ZGCharacter> chars, Grid grid){
 		super(chars);
+		
+		//Set the grid
+		this.grid = grid;
 
 		//Set the initiative order
 		initOrder = new ArrayList<ZGCharacter>();
@@ -179,7 +184,14 @@ public class CombatEvent extends Event {
 		} else {
 			return true;
 		}
-
+	}
+	
+	
+	/**
+	 * @return The grid
+	 */
+	public Grid getGrid(){
+		return this.grid;
 	}
 
 }

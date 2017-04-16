@@ -5,8 +5,8 @@ import zainsgaming.rpg.ZGObject;
 public class Weapon extends ZGObject {
 	private int dmg;
 	
-	public Weapon (int dmg){
-		super();
+	public Weapon (String name, int dmg){
+		super(name);
 		this.dmg = dmg;
 	}
 	

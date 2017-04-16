@@ -7,8 +7,6 @@ import zainsgaming.rpg.util.DiceUtil;
 
 public class ZGCharacter extends ZGObject{
 
-	private String name;	
-
 	// Person's stats
 	private int str, dex, con, intl, wis, cha ;
 	private int maxHP, currentHP;
@@ -33,8 +31,7 @@ public class ZGCharacter extends ZGObject{
 	 * @param isFriendly - true if the character is friendly to the player, else false.
 	 */
 	public ZGCharacter(String name, int[] stats, boolean isDefending, boolean isFriendly){
-		super();
-		this.name = name;
+		super(name);
 		this.isFriendly = isFriendly;
 		this.isDefending = isDefending;
 
@@ -233,13 +230,6 @@ public class ZGCharacter extends ZGObject{
 
 
 	// Other getters and setters
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
 
 	/**
 	 * @return the isFriendly
