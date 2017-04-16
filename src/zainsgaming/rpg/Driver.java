@@ -39,7 +39,7 @@ public class Driver {
 		System.out.println(grid);
 		
 		grid.move(p2, Grid.Direction.NORTH);
-		
+		//ASDF
 		System.out.println();
 		System.out.println(grid);
 		
