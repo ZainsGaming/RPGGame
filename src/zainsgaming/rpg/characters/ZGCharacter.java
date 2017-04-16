@@ -1,13 +1,11 @@
 package zainsgaming.rpg.characters;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import zainsgaming.rpg.ZGObject;
 import zainsgaming.rpg.items.Weapon;
 import zainsgaming.rpg.util.AttackTypes;
 import zainsgaming.rpg.util.DiceUtil;
 
-public class ZGCharacter {
+public class ZGCharacter extends ZGObject{
 
 	private String name;	
 
@@ -35,6 +33,7 @@ public class ZGCharacter {
 	 * @param isFriendly - true if the character is friendly to the player, else false.
 	 */
 	public ZGCharacter(String name, int[] stats, boolean isDefending, boolean isFriendly){
+		super();
 		this.name = name;
 		this.isFriendly = isFriendly;
 		this.isDefending = isDefending;

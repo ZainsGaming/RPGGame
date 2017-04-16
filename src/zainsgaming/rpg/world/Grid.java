@@ -1,5 +1,6 @@
 package zainsgaming.rpg.world;
 
+import zainsgaming.rpg.ZGObject;
 import zainsgaming.rpg.characters.ZGCharacter;
 
 public class Grid {
@@ -7,7 +8,7 @@ public class Grid {
 	private static final int DEFAULT_HEIGHT = 10;
 	private static final int DEFAULT_WIDTH = 10;
 
-	private ZGCharacter[][] grid;
+	private ZGObject[][] grid;
 
 	/**
 	 * Default constructor. Create empty default height and width grid (10X10).
@@ -20,7 +21,7 @@ public class Grid {
 	/**
 	 * Default constructor. Create empty 10X10 grid.
 	 */
-	public Grid(ZGCharacter[][] sampleGrid){
+	public Grid(ZGObject[][] sampleGrid){
 
 		if (sampleGrid == null || sampleGrid.length == 0 || sampleGrid[0].length == 0){
 			//If the grid is null or either length or width are 0 then create the default grid
@@ -29,10 +30,10 @@ public class Grid {
 			//Initialize the grid based on the sample grid.
 			int height = sampleGrid.length;
 			int width = sampleGrid[0].length;
-			grid = new ZGCharacter [height][width];
-			for (int i = 0; i < height; i++){
-				for (int j = 0; j < width; j++){
-					grid[i][j] = null;
+			grid = new ZGObject [height][width];
+			for (int col = 0; col < height; col++){
+				for (int row = 0; row < width; row++){
+					grid[col][row] = sampleGrid[col][row];
 				}
 			}
 		}
@@ -45,10 +46,10 @@ public class Grid {
 	private ZGCharacter[][] defaultGrid(){
 		//Create the default grid
 		ZGCharacter[][] defaultGrid = new ZGCharacter [DEFAULT_HEIGHT][DEFAULT_WIDTH];
-		for (int i = 0; i < DEFAULT_HEIGHT; i++){
-			for (int j = 0; j < DEFAULT_WIDTH; j++){
+		for (int col = 0; col < DEFAULT_HEIGHT; col++){
+			for (int row = 0; row < DEFAULT_WIDTH; row++){
 				//Set all values to null
-				defaultGrid[i][j] = null;
+				defaultGrid[col][row] = null;
 			}
 		}
 
@@ -58,15 +59,15 @@ public class Grid {
 	/**
 	 * Sets the given character to the given coordinates
 	 * @param character The character to set
-	 * @param x The x coordinate 
-	 * @param y The y coordinate
+	 * @param col The y coordinate 
+	 * @param row The x coordinate
 	 * @return true if the character can be set at the given coordiantes, else false.
 	 */
-	public boolean setCharacter(ZGCharacter character, int x, int y){
+	public boolean setCharacter(ZGCharacter character, int col, int row){
 		
-		if (grid[y][x] == null){
+		if (grid[col][row] == null){
 			//If the coordinate is null, then set the character
-			grid[y][x] = character;
+			grid[col][row] = character;
 			return true;
 		} else {
 			//If the coordiante already constain a characters, return false.

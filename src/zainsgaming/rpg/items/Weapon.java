@@ -1,9 +1,12 @@
 package zainsgaming.rpg.items;
 
-public class Weapon {
+import zainsgaming.rpg.ZGObject;
+
+public class Weapon extends ZGObject {
 	private int dmg;
 	
 	public Weapon (int dmg){
+		super();
 		this.dmg = dmg;
 	}
 	
