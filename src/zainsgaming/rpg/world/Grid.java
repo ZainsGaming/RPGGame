@@ -1,7 +1,8 @@
 package zainsgaming.rpg.world;
 
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import zainsgaming.rpg.ZGObject;
@@ -45,11 +46,11 @@ public class Grid {
 			int height = sampleGrid.length;
 			int width = sampleGrid[0].length;
 			grid = new ZGObject [height][width];
-			for (int col = 0; col < height; col++){
-				for (int row = 0; row < width; row++){
-					grid[col][row] = sampleGrid[col][row];
-					if (grid[col][row] != null){
-						objLocations.put(grid[col][row], new Pair<Integer, Integer>(col, row));
+			for (int row = 0; row < height; row++){
+				for (int col = 0; col < width; col++){
+					grid[row][col] = sampleGrid[row][col];
+					if (grid[row][col] != null){
+						objLocations.put(grid[row][col], new Pair<Integer, Integer>(row, col));
 					}
 				}
 			}
@@ -63,10 +64,10 @@ public class Grid {
 	private ZGCharacter[][] defaultGrid(){
 		//Create the default grid
 		ZGCharacter[][] defaultGrid = new ZGCharacter [DEFAULT_HEIGHT][DEFAULT_WIDTH];
-		for (int col = 0; col < DEFAULT_HEIGHT; col++){
-			for (int row = 0; row < DEFAULT_WIDTH; row++){
+		for (int row = 0; row < DEFAULT_HEIGHT; row++){
+			for (int col = 0; col < DEFAULT_WIDTH; col++){
 				//Set all values to null
-				defaultGrid[col][row] = null;
+				defaultGrid[row][col] = null;
 			}
 		}
 
@@ -75,17 +76,17 @@ public class Grid {
 
 	/**
 	 * Sets the given object to the given coordinates
-	 * @param object The object to set
-	 * @param col The y coordinate 
-	 * @param row The x coordinate
+	 * @param object The object to set 
+	 * @param row The row coordinate
+	 * @param col The column coordinate
 	 * @return true if the character can be set at the given coordiantes, else false.
 	 */
-	public boolean setObject(ZGObject obj, int col, int row){
+	public boolean setObject(ZGObject obj, int row, int col){
 
-		if (grid[col][row] == null){
+		if (grid[row][col] == null){
 			//If the coordinate is null, then set the object
-			grid[col][row] = obj;
-			objLocations.put(obj, new Pair<Integer, Integer>(col, row));
+			grid[row][col] = obj;
+			objLocations.put(obj, new Pair<Integer, Integer>(row, col));
 			return true;
 		} else {
 			//If the coordiante already constain an object, return false.
@@ -103,8 +104,8 @@ public class Grid {
 		if (objLocations.containsKey(obj)){				//Ensure that the object is already in the grid
 			
 			//Get the objects current location
-			int col = objLocations.get(obj).first;
-			int row = objLocations.get(obj).second;
+			int row = objLocations.get(obj).first;
+			int col = objLocations.get(obj).second;
 			//Variables to store the new location
 			int newCol = -1;
 			int newRow = -1;
@@ -113,33 +114,33 @@ public class Grid {
 			//the new location is empty.
 			switch(direction){
 			case NORTH:
-				if (col != 0 && grid[col-1][row] == null){
-					newCol = col-1;
-					newRow = row;
+				if (row != 0 && grid[row-1][col] == null){
+					newRow = row - 1;
+					newCol = col;
 				} else {
 					return false;
 				}
 				break;
 			case SOUTH:
-				if (col != (grid.length-1) && grid[col+1][row] == null){
-					newCol = col+1;
-					newRow = row;
+				if (row < (grid.length-1) && grid[row+1][col] == null){
+					newRow = row + 1;
+					newCol = col;
 				} else {
 					return false;
 				}
 				break;
 			case EAST:
-				if (row != (grid[0].length-1) && grid[col][row+1] == null){
-					newCol = col;
-					newRow = row+1;
+				if (col < (grid[0].length-1) && grid[row][col+1] == null){
+					newRow = row;
+					newCol = col + 1;
 				} else {
 					return false;
 				}
 				break;
 			case WEST:
-				if (row != 0 && grid[col][row-1] == null){
-					newCol = col;
-					newRow = row-1;
+				if (col != 0 && grid[row][col-1] == null){
+					newRow = row;
+					newCol = col - 1;
 				} else {
 					return false;
 				}
@@ -149,14 +150,37 @@ public class Grid {
 			}
 			
 			//Update the grid and objLocations.
-			grid[col][row] = null;
-			grid[newCol][newRow] = obj;
-			objLocations.put(obj, new Pair<Integer, Integer>(newCol, newRow));
+			grid[row][col] = null;
+			grid[newRow][newCol] = obj;
+			objLocations.put(obj, new Pair<Integer, Integer>(newRow, newCol));
 			return true;
 		}
 
 		//Return false because the grid does not contain the object.
 		return false;
+	}
+	
+	public List<ZGObject> getNeighbours (ZGObject source, int range){
+		List<ZGObject> neighbours = new ArrayList<ZGObject>();
+		if (range < 0){
+			return neighbours;
+		}
+		
+		int srcRow = objLocations.get(source).first;
+		int srcCol = objLocations.get(source).second;
+		
+		for (int i = range*-1; i <= range; i++){
+			for (int j = range*-1; j <= range; j++){
+				if ((srcCol+i) < grid.length){
+					if (grid[srcCol+i][srcRow] != null){
+						neighbours.add(grid[srcCol+i][srcRow]);
+					}
+				}
+			}
+		}
+		
+		
+		return neighbours;
 	}
 	
 	/**
@@ -166,19 +190,18 @@ public class Grid {
 		StringBuilder sb = new StringBuilder();
 		
 		//Build the string based on the contents of the grid array
-		for (int col = 0; col < grid.length; col++){
-			for (int row = 0; row < grid[0].length; row++){
-				if (grid[col][row] == null){
+		for (int row = 0; row < grid.length; row++){
+			for (int col = 0; col < grid[0].length; col++){
+				if (grid[row][col] == null){
 					sb.append("[ ]");
 				} else {
 					//Only take the first character of the name. This is to keep the
 					//printed version aligned.
-					sb.append("[" + grid[col][row].getName().charAt(0) +"]");
+					sb.append("[" + grid[row][col].getName().charAt(0) +"]");
 				}
 			}
 			sb.append("\n");
 		}
-		
 		
 		return sb.toString();
 	}
